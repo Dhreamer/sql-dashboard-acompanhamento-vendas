@@ -80,7 +80,7 @@ Durante o desenvolvimento, utilizei recursos do SQL para consultar, relacionar, 
 - Conversão de tipos;
 - Cálculos de receita, ticket médio e indicadores percentuais.
 
-Além das consultas principais, também realizei verificações adicionais no PostgreSQL para conferir alguns aspectos da base e dos cálculos utilizados. Essas consultas foram organizadas em uma seção separada ao final do arquivo SQL.
+Além das consultas principais, também realizei verificações adicionais no PostgreSQL para conferir alguns aspectos da base e dos cálculos utilizados. Os resultados dessas verificações estão resumidos aqui e detalhados no documento complementar.
 
 ## Ferramentas utilizadas
 
