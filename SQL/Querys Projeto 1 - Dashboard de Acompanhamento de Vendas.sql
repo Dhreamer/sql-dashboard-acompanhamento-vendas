@@ -1,6 +1,4 @@
----------------------------------------------------------------------------------------------------
 -- CRIANDO A FUNÇÃO DATEDIFF
-
 CREATE FUNCTION datediff (unidade VARCHAR, data_inicial DATE, data_final DATE)
 RETURNS INTEGER
 LANGUAGE SQL
@@ -15,7 +13,6 @@ AS $$
 	$$;
 
 DROP FUNCTION datediff (VARCHAR, DATE, DATE);
-----------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 ------ PROJETO SQL 1 - DASHBOARD DE ACOMPANHAMENTO DE VENDAS ------
@@ -32,7 +29,6 @@ WHERE paid_date IS NOT NULL
 GROUP BY paid_month
 ORDER BY paid_month;
 
-
 -- QUANTIDADE DE VISITAS NO MÊS NO SITE
 SELECT
 	DATE_TRUNC ('month', visit_page_date)::date AS visit_page_month,
@@ -40,7 +36,6 @@ SELECT
 FROM sales.funnel
 GROUP BY visit_page_month
 ORDER BY visit_page_month DESC;
-
 
 -- QUERY COMPLETA - RECEITA, LEADS, CONVERSÃO E TICKET MÉDIO MÊS A MÊS
 WITH 
@@ -75,7 +70,6 @@ FROM leads
 LEFT JOIN payments
 	ON leads.visit_page_month = paid_month;
 	
-
 -- ESTADOS QUE MAIS VENDERAM NO MÊS
 SELECT
 	'Brazil' AS "país",
@@ -131,3 +125,75 @@ FROM sales.funnel
 WHERE  visit_page_date BETWEEN '2021-08-01' AND '2021-08-31'
 GROUP BY dia_semana
 ORDER BY dia_semana;
+
+
+-- ==========================================================
+-- CONSULTAS ADICIONAIS DE VALIDAÇÃO
+-- ==========================================================
+-- Consultas desenvolvidas durante a revisão do projeto
+-- para conferir os dados, os cálculos e os relacionamentos.
+
+-- VERIFICAÇÃO DE TIPO DE DADOS
+SELECT
+	discount,
+	paid_date,
+	visit_page_date
+FROM sales.funnel;
+
+-- VERIFICAÇÃO DOS DESCONTOS NAS VENDAS PAGAS
+SELECT
+    CASE
+        WHEN discount < 0 THEN 'Negativo'
+        WHEN discount = 0 THEN 'Zero'
+        WHEN discount > 0 THEN 'Positivo'
+    END AS tipo_desconto,
+    COUNT(*) AS quantidade,
+    MIN(discount) AS menor_valor,
+    MAX(discount) AS maior_valor
+FROM sales.funnel
+WHERE paid_date IS NOT NULL
+GROUP BY tipo_desconto
+ORDER BY tipo_desconto;
+
+-- VERIFICAÇÃO DE DESCONTOS POSITIVOS
+SELECT
+    visitas.discount,
+    produtos.price,
+    produtos.price * (1 + visitas.discount) AS valor_calculado
+FROM sales.funnel AS visitas
+LEFT JOIN sales.products AS produtos
+    ON visitas.product_id = produtos.product_id
+WHERE visitas.paid_date IS NOT NULL
+    AND visitas.discount > 0
+ORDER BY visitas.discount DESC
+LIMIT 15;
+
+-- VERIFICAÇÃO DO RELACIONAMENTO ENTRE VENDAS E PRODUTOS
+SELECT
+    COUNT(*) AS vendas_pagas,
+    COUNT(*) FILTER (WHERE visitas.product_id IS NULL) AS vendas_sem_product_id,
+    COUNT(*) FILTER (WHERE visitas.product_id IS NOT NULL AND produtos.product_id IS NULL) AS vendas_sem_correspondencia,
+    COUNT(*) FILTER (WHERE produtos.product_id IS NOT NULL AND produtos.price IS NULL) AS produtos_sem_preco
+FROM sales.funnel AS visitas
+LEFT JOIN sales.products AS produtos
+    ON visitas.product_id = produtos.product_id
+WHERE visitas.paid_date IS NOT NULL;
+
+-- VERIFICAÇÃO DE DUPLICIDADE DE PRODUCT_ID
+SELECT
+    product_id,
+    COUNT(*) AS quantidade
+FROM sales.products
+GROUP BY product_id
+HAVING COUNT(*) > 1
+ORDER BY quantidade DESC;
+
+-- VERIFICAÇÃO DO VOLUME DE LEADS EM SETEMBRO DE 2020
+SELECT
+    MIN(visit_page_date) AS primeira_visita,
+    MAX(visit_page_date) AS ultima_visita,
+    COUNT(*) AS total_registros,
+    COUNT(DISTINCT visit_page_date) AS dias_com_registros
+FROM sales.funnel
+WHERE visit_page_date >= '2020-09-01'
+  AND visit_page_date < '2020-10-01';
