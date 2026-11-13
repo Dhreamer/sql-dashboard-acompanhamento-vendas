@@ -51,7 +51,7 @@ A análise dos resultados permitiu identificar alguns padrões no período estud
 
 As análises completas, com gráficos, interpretações e observações sobre os resultados, estão disponíveis no documento complementar:
 
-[**Consultar a análise completa dos resultados (PDF)**](documentacao/analise-dos-resultados.pdf)
+[**Consultar a análise completa dos resultados (PDF)**](An%C3%A1lise%20dos%20resultados/Projeto1_An%C3%A1lise_dos_Resultados.pdf)
 
 ## Banco de dados
 
@@ -107,7 +107,7 @@ O arquivo possui três abas:
 
 - [Abrir o dashboard em Excel](Dashboard/Projeto%201%20-%20Dashboard%20de%20Vendas.xlsx)
 - [Visualizar as consultas SQL](SQL/Querys%20Projeto%201%20-%20Dashboard%20de%20Acompanhamento%20de%20Vendas.sql)
-- [Consultar a análise completa dos resultados (PDF)](documentacao/analise-dos-resultados.pdf)
+- [Consultar a análise completa dos resultados (PDF)](An%C3%A1lise%20dos%20resultados/Projeto1_An%C3%A1lise_dos_Resultados.pdf)
 
 ## Verificações adicionais
 
@@ -137,8 +137,8 @@ sql-dashboard-acompanhamento-vendas/
 │   └── Projeto 1 - Dashboard de Vendas.xlsx
 ├── SQL/
 │   └── Querys Projeto 1 - Dashboard de Acompanhamento de Vendas.sql
-├── documentacao/
-│   └── analise-dos-resultados.pdf
+├── Análise dos resultados/
+│   └── Projeto1_Análise_dos_Resultados.pdf
 └── imagens/
     └── Print Dashboard Projeto 1.jpg
 ```
